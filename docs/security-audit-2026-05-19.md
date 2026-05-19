@@ -4,17 +4,17 @@
 **Коммит:** `3c4fb9d` (main)
 **Стэк:** Next.js 16.2.6, React 19.2.4, @supabase/ssr 0.10.3, Supabase Auth
 
-## Сводка
+## Итоги
 
-| # | Область | Статус | Severity |
-|---|---|---|---|
-| 1 | Секреты в коде и git | ✅ Чисто | — |
-| 2 | Frontend exposure | ✅ Чисто | — |
-| 3 | API auth + IDOR | ✅ ОК (через Server Actions) | — |
-| 4 | RLS на `habits` и `completions` | ⚠️ Не верифицируется из репо | **Critical (если RLS отключён)** |
-| 5 | Webhooks | ✅ Отсутствуют | — |
-| 6 | CORS + CSP headers | ❌ Отсутствуют | Medium |
-| 7 | Dependencies (npm audit) | ⚠️ 2 moderate | Low |
+| Область | Статус | Детали |
+|---------|--------|--------|
+| Секреты в коде/git | ✅ | Ключи в `.env.local`, в истории нет |
+| Frontend exposure | ✅ | `service_role` не попадает в бандл |
+| API auth + IDOR | ✅ | Server Actions с `auth.getUser()` и фильтрацией по `user_id` |
+| RLS на `habits` и `completions` | ⚠️ | Не верифицируется из репо — проверить в Supabase dashboard (**Critical, если RLS отключён**) |
+| Webhooks | ✅ | Эндпоинтов нет |
+| CORS + CSP headers | ❌ | `next.config.ts` пустой, security-headers отсутствуют (Medium) |
+| Dependencies (npm audit) | ⚠️ | 2 moderate: postcss XSS через `next` (Low impact) |
 
 **Главный риск:** RLS — единственная защита данных от пользовательского браузера, поскольку `NEXT_PUBLIC_SUPABASE_ANON_KEY` доступен на клиенте. Если RLS не настроен корректно на стороне Supabase, любой авторизованный (или анонимный) пользователь может читать чужие привычки через прямой вызов REST API Supabase. **Проверить вручную в Supabase dashboard.**
 
